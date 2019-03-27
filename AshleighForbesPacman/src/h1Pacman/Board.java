@@ -437,7 +437,7 @@ public class Board extends JPanel implements ActionListener {
                 if ((screendata[i] & 32) != 0) // draws point
                 {
                     g2d.setColor(dotcolor);
-                    g2d.fillRect(x + 22, y + 22, 8, 8);
+                    g2d.fillRect(x + 10, y + 10, 8, 8);
                 }
                 i++;
             }
