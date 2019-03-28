@@ -298,7 +298,8 @@ public class Board extends JPanel implements ActionListener {
             if ((ch & 32) != 0) {
                 screendata[pos] = (short)(ch & 15);
                 this.score = score + 40;
-
+            }
+            
             if (reqdx != 0 || reqdy != 0) {
                 if (!((reqdx == -1 && reqdy == 0 && (ch & 1) != 0) ||
                       (reqdx == 1 && reqdy == 0 && (ch & 4) != 0) ||
