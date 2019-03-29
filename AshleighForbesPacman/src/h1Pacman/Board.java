@@ -193,8 +193,6 @@ public class Board extends JPanel implements ActionListener {
     if (finished) {
       score += 50;
 
-      if (nrofghosts < maxghosts)
-        nrofghosts++;
       if (currentspeed < maxspeed)
         currentspeed++;
       LevelInit();
