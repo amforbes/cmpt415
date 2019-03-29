@@ -64,10 +64,9 @@ public class Board extends JPanel implements ActionListener {
 
   // Power pellet #'s are
   // 35 top left
-  // 40 bottom left
+  // 41 bottom left
   // 38 top right
   // 44 bottom right
-  // also the barrier is 4 to close it off
   final short leveldata[] =
     { 35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
@@ -82,7 +81,7 @@ public class Board extends JPanel implements ActionListener {
         1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 7, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
-        4,  40, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
+        1,  41, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
         9,  8,  8,  8,  8,  8,  8,  8,  8,  8,  25, 24, 24, 24, 44 };
 
   final int validspeeds[] = { 1, 2, 3, 4, 6, 8 };
