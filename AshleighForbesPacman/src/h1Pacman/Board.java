@@ -274,6 +274,13 @@ public class Board extends JPanel implements ActionListener {
         deathcounter = 64;
 
       }
+      if (pacmanx > (ghostx[i] - 12) && pacmanx < (ghostx[i] + 12) &&
+              pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
+              ingame && ppellet) 
+          dying = false;
+          ghostx[i] = 108;
+          ghosty[i] = 108;
+      }
     }
   }
 
@@ -307,6 +314,8 @@ public class Board extends JPanel implements ActionListener {
       if ((ch & 32) != 0) {
         screendata[pos] = (short)(ch & 15);
         this.score = score + 40;
+        
+        ppellet = true;
       }
 
       if (reqdx != 0 || reqdy != 0) {
