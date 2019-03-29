@@ -425,7 +425,6 @@ public class Board extends JPanel implements ActionListener {
   public void DrawMaze(Graphics2D g2d) {
     short i = 0;
     int x, y;
-    int pos = 0;
 
     for (y = 0; y < scrsize; y += blocksize) {
       for (x = 0; x < scrsize; x += blocksize) {
