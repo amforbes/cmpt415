@@ -51,13 +51,13 @@ public class Board extends JPanel implements ActionListener {
   int deathcounter;
   int[] dx, dy;
   int[] ghostx, ghosty, ghostdx, ghostdy, ghostspeed;
-//  int cherry;
+  int cherriesx, cherriesy;
 
   Image ghost;
   Image pacman1, pacman2up, pacman2left, pacman2right, pacman2down;
   Image pacman3up, pacman3down, pacman3left, pacman3right;
   Image pacman4up, pacman4down, pacman4left, pacman4right;
-//  Image cherries;
+  Image cherries;
 
   int pacmanx, pacmany, pacmandx, pacmandy;
   int reqdx, reqdy, viewdx, viewdy;
@@ -78,7 +78,7 @@ public class Board extends JPanel implements ActionListener {
         1,  17, 16, 20, 0,  0,  0,  0,  0,  0,  0,  17, 20, 0,  21,
         1,  17, 16, 16, 18, 18, 22, 0,  19, 18, 18, 16, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 16, 20, 0,  21, 
-        1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 7, 20, 0,  21,
+        1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 64, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
         1,  41, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
@@ -148,7 +148,6 @@ public class Board extends JPanel implements ActionListener {
   }
 
 //  prompts player to start the game
-  
   public void ShowIntroScreen(Graphics2D g2d) {
 
     g2d.setColor(new Color(0, 32, 48));
@@ -336,6 +335,10 @@ public class Board extends JPanel implements ActionListener {
   }
 
 
+  public void DrawCherry(Graphics2D g2d) {
+    g2d.drawImage(cherries, 40, 40, this);
+  }
+  
   public void DrawPacMan(Graphics2D g2d) {
     if (viewdx == -1)
       DrawPacManLeft(g2d);
@@ -422,6 +425,7 @@ public class Board extends JPanel implements ActionListener {
   public void DrawMaze(Graphics2D g2d) {
     short i = 0;
     int x, y;
+    int pos = 0;
 
     for (y = 0; y < scrsize; y += blocksize) {
       for (x = 0; x < scrsize; x += blocksize) {
@@ -455,20 +459,9 @@ public class Board extends JPanel implements ActionListener {
         {
           g2d.setColor(dotcolor);
           g2d.fillRect(x + 10, y + 10, 8, 8);
-          //NOT FULLY THOUGHT OUT YET BUT GETTING THERE.. 
-                //ppellet = true;
-                
-                
-                //THIS IS THE CODE THAT CHECKS IF THE GHOSTS AND THE PACMAN ARE TOUCHING.
-                //~~for 30 seconds~~}
-                	//if (pacmanx > (ghostx[i] - 12) && pacmanx < (ghostx[i] + 12) &&
-                       		//pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
-                        	//ingame) {
-
-                        	//dying = false;
-                //}
-                
-                //~~while the timer is running, print numbers decrementing to 0 starting from 30 
+        }
+        if ((screendata[i] & 64) != 0) { //draws cherry
+          g2d.drawImage(cherries, x, y, this);
         }
         i++;
       }
@@ -538,7 +531,7 @@ public class Board extends JPanel implements ActionListener {
     pacman2right = new ImageIcon(Board.class.getResource("/res/right1_44.png")).getImage();
     pacman3right = new ImageIcon(Board.class.getResource("/res/right2_44.png")).getImage();
     pacman4right = new ImageIcon(Board.class.getResource("/res/right3_44.png")).getImage();
-//    cherries = new ImageIcon(Board.class.getResource("/res/cherries.png")).getImage();
+    cherries = new ImageIcon(Board.class.getResource("/res/cherries.png")).getImage();
   }
 
   public void paint(Graphics g)
