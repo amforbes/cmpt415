@@ -192,7 +192,9 @@ public class Board extends JPanel implements ActionListener {
 // when all pellets are eaten, move to next level
     if (finished) {
       score += 50;
-
+      
+      if (nrofghosts < maxghosts)
+        nrofghosts++;
       if (currentspeed < maxspeed)
         currentspeed++;
       LevelInit();
