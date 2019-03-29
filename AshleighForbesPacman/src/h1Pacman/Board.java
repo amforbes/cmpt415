@@ -450,6 +450,20 @@ public class Board extends JPanel implements ActionListener {
         {
           g2d.setColor(dotcolor);
           g2d.fillRect(x + 10, y + 10, 8, 8);
+          //NOT FULLY THOUGHT OUT YET BUT GETTING THERE.. 
+                //ppellet = true;
+                
+                
+                //THIS IS THE CODE THAT CHECKS IF THE GHOSTS AND THE PACMAN ARE TOUCHING.
+                //~~for 30 seconds~~}
+                	//if (pacmanx > (ghostx[i] - 12) && pacmanx < (ghostx[i] + 12) &&
+                       		//pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
+                        	//ingame) {
+
+                        	//dying = false;
+                //}
+                
+                //~~while the timer is running, print numbers decrementing to 0 starting from 30 
         }
         i++;
       }
