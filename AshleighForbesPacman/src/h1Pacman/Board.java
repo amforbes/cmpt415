@@ -51,13 +51,13 @@ public class Board extends JPanel implements ActionListener {
   int deathcounter;
   int[] dx, dy;
   int[] ghostx, ghosty, ghostdx, ghostdy, ghostspeed;
-  int cherry;
+//  int cherry;
 
   Image ghost;
   Image pacman1, pacman2up, pacman2left, pacman2right, pacman2down;
   Image pacman3up, pacman3down, pacman3left, pacman3right;
   Image pacman4up, pacman4down, pacman4left, pacman4right;
-  Image cherries;
+//  Image cherries;
 
   int pacmanx, pacmany, pacmandx, pacmandy;
   int reqdx, reqdy, viewdx, viewdy;
@@ -73,7 +73,7 @@ public class Board extends JPanel implements ActionListener {
         1,  17, 16, 20, 0,  0,  0,  0,  0,  0,  0,  17, 20, 0,  21,
         1,  17, 16, 16, 18, 18, 22, 0,  19, 18, 18, 16, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 16, 20, 0,  21, 
-        1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 0, 20, 0,  21,
+        1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 7, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
         4,  40, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
@@ -519,7 +519,7 @@ public class Board extends JPanel implements ActionListener {
     pacman2right = new ImageIcon(Board.class.getResource("/res/right1_44.png")).getImage();
     pacman3right = new ImageIcon(Board.class.getResource("/res/right2_44.png")).getImage();
     pacman4right = new ImageIcon(Board.class.getResource("/res/right3_44.png")).getImage();
-
+//    cherries = new ImageIcon(Board.class.getResource("/res/cherries.png")).getImage();
   }
 
   public void paint(Graphics g)
