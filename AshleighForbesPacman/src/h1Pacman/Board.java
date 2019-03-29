@@ -281,7 +281,7 @@ public class Board extends JPanel implements ActionListener {
           ghostx[i] = 108;
           ghosty[i] = 108;
       }
-    }
+    
   }
 
 
