@@ -63,12 +63,13 @@ public class Board extends JPanel implements ActionListener {
   int reqdx, reqdy, viewdx, viewdy;
 
   // Power pellet #'s are
-  // 32 top left
+  // 35 top left
   // 40 bottom left
-  // 36 top right
+  // 38 top right
   // 44 bottom right
+  // also the barrier is 4 to close it off
   final short leveldata[] =
-    { 32, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 36,
+    { 35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 
         21, 0,  0,  0,  17, 16, 16, 24, 16, 16, 16, 16, 16, 16, 20, 
