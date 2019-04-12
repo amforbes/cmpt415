@@ -19,10 +19,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import sf.Sound;
+import sf.SoundFactory;
+
 
 @SuppressWarnings("serial")
 public class Board extends JPanel implements ActionListener {
-
+  
+  //sounds
+  public final static String DIR = "src/res/";
+  public final static String SOUND_CHOMP = DIR + "pacman_chomp.wav";
+  public final static String SOUND_DEATH = DIR + "pacman_death.wav";
+  public final static String SOUND_EATGHOST = DIR + "pacman_eatghost.wav";
+  public final static String SOUND_POWERUP = DIR + "pacman_eatfruit.wav";
+  
   Dimension d;
   Font smallfont = new Font("Helvetica", Font.BOLD, 20);
 
@@ -107,7 +117,7 @@ public class Board extends JPanel implements ActionListener {
     setBackground(Color.black);
     setDoubleBuffered(true);
 
-    
+
     ghostx = new int[maxghosts];
     ghostdx = new int[maxghosts];
     ghosty = new int[maxghosts];
@@ -124,7 +134,7 @@ public class Board extends JPanel implements ActionListener {
     GameInit();
   }
 
-//counts pacman's position to show which image should be drawn (direction)
+  //counts pacman's position to show which image should be drawn (direction)
   public void DoAnim() {
     pacanimcount--;
     if (pacanimcount <= 0) {
@@ -139,15 +149,20 @@ public class Board extends JPanel implements ActionListener {
   public void PlayGame(Graphics2D g2d) {
     if (dying) {
       Death();
-    } else {
+      Sound sound = SoundFactory.getInstance(SOUND_DEATH);
+      SoundFactory.play(sound);
+    } 
+    else {
       MovePacMan();
       DrawPacMan(g2d);
       moveGhosts(g2d);
       CheckMaze();
+//      Sound sound = SoundFactory.getInstance(SOUND_CHOMP);
+//      sound.play();
     }
   }
 
-//  prompts player to start the game
+  //  prompts player to start the game
   public void ShowIntroScreen(Graphics2D g2d) {
 
     g2d.setColor(new Color(0, 32, 48));
@@ -164,7 +179,7 @@ public class Board extends JPanel implements ActionListener {
     g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
 
-// displays the players score
+  // displays the players score
   public void DrawScore(Graphics2D g) {
     int i;
     String s;
@@ -181,7 +196,7 @@ public class Board extends JPanel implements ActionListener {
 
   public void CheckMaze() {
     short i = 0;
-//  checks to see if there are any pellets left for pacman to eat
+    //  checks to see if there are any pellets left for pacman to eat
     boolean finished = true;
 
     while (i < nrofblocks * nrofblocks && finished) {
@@ -189,10 +204,10 @@ public class Board extends JPanel implements ActionListener {
         finished = false;
       i++;
     }
-// when all pellets are eaten, move to next level
+    // when all pellets are eaten, move to next level
     if (finished) {
       score += 50;
-      
+
       if (nrofghosts < maxghosts)
         nrofghosts++;
       if (currentspeed < maxspeed)
@@ -275,13 +290,13 @@ public class Board extends JPanel implements ActionListener {
 
       }
       if (pacmanx > (ghostx[i] - 12) && pacmanx < (ghostx[i] + 12) &&
-              pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
-              ingame && ppellet) 
-          dying = false;
-          ghostx[i] = 108;
-          ghosty[i] = 108;
+          pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
+          ingame && ppellet) {
+        dying = false;
+        ghostx[i] = 108;
+        ghosty[i] = 108;
       }
-    
+    }
   }
 
 
@@ -293,6 +308,8 @@ public class Board extends JPanel implements ActionListener {
   public void MovePacMan() {
     int pos;
     short ch;
+//    Sound sound = SoundFactory.getInstance(SOUND_);
+//    SoundFactory.play(sound);
 
     if (reqdx == -pacmandx && reqdy == -pacmandy) {
       pacmandx = reqdx;
@@ -314,7 +331,7 @@ public class Board extends JPanel implements ActionListener {
       if ((ch & 32) != 0) {
         screendata[pos] = (short)(ch & 15);
         this.score = score + 40;
-        
+
         ppellet = true;
       }
 
@@ -343,11 +360,10 @@ public class Board extends JPanel implements ActionListener {
     pacmany = pacmany + pacmanspeed * pacmandy;
   }
 
-
   public void DrawCherry(Graphics2D g2d) {
     g2d.drawImage(cherries, 40, 40, this);
   }
-  
+
   public void DrawPacMan(Graphics2D g2d) {
     if (viewdx == -1)
       DrawPacManLeft(g2d);
@@ -522,8 +538,7 @@ public class Board extends JPanel implements ActionListener {
     dying = false;
   }
 
-  public void GetImages()
-  {
+  public void GetImages(){
 
     ghost = new ImageIcon(Board.class.getResource("/res/ghost_40.png")).getImage();
     pacman1 = new ImageIcon(Board.class.getResource("/res/pacman_44.png")).getImage();
