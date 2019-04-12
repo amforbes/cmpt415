@@ -14,6 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -42,16 +45,20 @@ public class Board extends JPanel implements ActionListener {
   final int pacmananimcount = 4;
   final int maxghosts = 12;
   final int pacmanspeed = 6;
+  
+   
 
   int pacanimcount = pacanimdelay;
   int pacanimdir = 1;
   int pacmananimpos = 0;
   int nrofghosts = 6;
-  int pacsleft, score;
+  int pacsleft, score; 
   int deathcounter;
   int[] dx, dy;
   int[] ghostx, ghosty, ghostdx, ghostdy, ghostspeed;
   int cherriesx, cherriesy;
+  
+  String highScore = "";
 
   Image ghost;
   Image pacman1, pacman2up, pacman2left, pacman2right, pacman2down;
@@ -162,22 +169,34 @@ public class Board extends JPanel implements ActionListener {
     g2d.setColor(Color.white);
     g2d.setFont(small);
     g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+    
+  //high score
+    if (highScore.equals("")) {
+    	highScore = this.GetHighScore();
+    }
   }
 
 // displays the players score
   public void DrawScore(Graphics2D g) {
     int i;
     String s;
+    String hs; 
 
     g.setFont(smallfont);
     g.setColor(new Color(96, 128, 255));
     s = "Score: " + score;
+    hs = "High Score: " + highScore; 
     g.drawString(s, scrsize / 6 + 192, scrsize + 30);
+    g.drawString(hs,  scrsize / 6 + 180,  scrsize + 30);
+    
+    //life indicator
     for (i = 0; i < pacsleft; i++) {
       g.drawImage(pacman3left, i * 56 + 18, scrsize + 2, this);
     }
+   
   }
 
+  
 
   public void CheckMaze() {
     short i = 0;
@@ -522,6 +541,38 @@ public class Board extends JPanel implements ActionListener {
     dying = false;
   }
 
+  public String GetHighScore() {
+	  FileReader readFile = null;
+	  BufferedReader reader = null; 
+	  
+	  //tries to find the high score data file
+	  try {
+		  
+		  //finds the high score data file
+		  readFile = new FileReader("highscore.dat");
+		  
+		  //reads data file
+		  reader = new BufferedReader(readFile); 
+		  
+		  //returns the first line
+		  return reader.readLine();
+	  }
+	  catch (Exception e) {
+		  return "0"; 
+	  }
+	  //closes the reader
+	  finally {
+		  try {
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	  }
+	  
+	  
+  }
+  
   public void GetImages()
   {
 
@@ -627,3 +678,4 @@ public class Board extends JPanel implements ActionListener {
     repaint();  
   }
 }
+
