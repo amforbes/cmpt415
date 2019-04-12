@@ -44,6 +44,9 @@ public class Board extends JPanel implements ActionListener {
   boolean ingame = false;
   boolean dying = false;
   boolean ppellet = false; 
+  
+  public enum State {REGULAR, POWERUP};
+  private State state = State.REGULAR;
 
   final int blocksize = 48;
   final int nrofblocks = 15;
@@ -100,6 +103,7 @@ public class Board extends JPanel implements ActionListener {
   int currentspeed = 3;
   short[] screendata;
   Timer timer;
+  Timer powtimer; 
 
 
   public Board() {
@@ -339,6 +343,20 @@ public class Board extends JPanel implements ActionListener {
         
         Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
         SoundFactory.play(sound);
+        
+        state = State.POWERUP;
+        
+        if (state == State.POWERUP) {
+  		  powtimer = new Timer(100000, this);
+  	  	  powtimer.start();
+        }
+        
+        if (powtimer.isRunning()){
+        	ppellet = true; 
+        } else {	
+        	ppellet = false; 
+        	state = State.REGULAR;	
+        }
       }
 
       if (reqdx != 0 || reqdy != 0) {
