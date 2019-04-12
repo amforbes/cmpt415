@@ -326,6 +326,8 @@ public class Board extends JPanel implements ActionListener {
       if ((ch & 16) != 0) {
         screendata[pos] = (short)(ch & 15);
         score++;
+        Sound sound = SoundFactory.getInstance(SOUND_CHOMP);
+        SoundFactory.play(sound);
       }
 
       //changes the score when power pellet is eaten
