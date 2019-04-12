@@ -334,6 +334,9 @@ public class Board extends JPanel implements ActionListener {
         this.score = score + 40;
 
         ppellet = true;
+        
+        Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
+        SoundFactory.play(sound);
       }
 
       if (reqdx != 0 || reqdy != 0) {
