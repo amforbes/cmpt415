@@ -275,7 +275,6 @@ public class Board extends JPanel implements ActionListener {
           ghostdx[i] = dx[count];
           ghostdy[i] = dy[count];
         }
-
       }
       ghostx[i] = ghostx[i] + (ghostdx[i] * ghostspeed[i]);
       ghosty[i] = ghosty[i] + (ghostdy[i] * ghostspeed[i]);
@@ -295,6 +294,8 @@ public class Board extends JPanel implements ActionListener {
         dying = false;
         ghostx[i] = 108;
         ghosty[i] = 108;
+        Sound sound = SoundFactory.getInstance(SOUND_EATGHOST);
+        SoundFactory.play(sound);
       }
     }
   }
