@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import java.util.Date; 
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -99,7 +101,14 @@ public class Board extends JPanel implements ActionListener {
 
   int currentspeed = 3;
   short[] screendata;
-  Timer timer;
+  Timer timer; 
+  Date peldatetime;
+  
+  //pelltime is the original time the pellet was eaten
+  //pelltimeup is the number that is incremented if ppellet is true
+  long pelltime; 
+  long pelltimeup; 
+  
 
 
   public Board() {
@@ -224,8 +233,20 @@ public class Board extends JPanel implements ActionListener {
     LevelContinue();
   }
 
-  public void PowerPellet() {
-
+  public void PowerPelletTimer() {
+	  
+	  //while ppellet is true, check the time, this refreshes every time
+	  //the screen repaints to check if ppellet is true and ++pelltimeup
+	  if (ppellet == true) {
+		  
+		  ++pelltimeup;
+		  System.out.println(pelltimeup);
+	   
+		  if (pelltimeup == pelltime+100) {
+			  ppellet = false; 
+			  System.out.println("done!!!");
+		  }
+	  }
   }
 
 
@@ -336,6 +357,15 @@ public class Board extends JPanel implements ActionListener {
         this.score = score + 40;
 
         ppellet = true;
+        
+        // new date/time
+  	  	peldatetime = new Date(); 
+  	  	// power pellet start time 
+  	  	pelltime = peldatetime.getTime();
+  	  	// power pellet start time for counter
+  	  	pelltimeup = peldatetime.getTime();
+        
+  	  	System.out.println("Ppellet is true now!");
         
         Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
         SoundFactory.play(sound);
@@ -645,6 +675,7 @@ public class Board extends JPanel implements ActionListener {
   }
 
   public void actionPerformed(ActionEvent e) {
-    repaint();  
+    repaint();
+    PowerPelletTimer();
   }
 }
