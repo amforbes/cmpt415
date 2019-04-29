@@ -362,6 +362,8 @@ public class Board extends JPanel implements ActionListener {
         Sound sound = SoundFactory.getInstance(SOUND_CHOMP);
         SoundFactory.play(sound);
       }
+	    
+      // cherry eating and bonus points
       if ((ch & 64) != 0) {
           screendata[pos] = (short)(ch & 15);
           score = score + 100;
