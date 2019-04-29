@@ -70,6 +70,7 @@ public class Board extends JPanel implements ActionListener {
   Image pacman3up, pacman3down, pacman3left, pacman3right;
   Image pacman4up, pacman4down, pacman4left, pacman4right;
   Image cherries;
+  Image pellghost;
 
   int pacmanx, pacmany, pacmandx, pacmandy;
   int reqdx, reqdy, viewdx, viewdy;
@@ -79,6 +80,11 @@ public class Board extends JPanel implements ActionListener {
   // 41 bottom left
   // 38 top right
   // 44 bottom right
+	
+  // 1 left
+  // 2 right
+  // 4 top 
+  // 8 bottom
   final short leveldata[] =
     { 35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
@@ -240,11 +246,9 @@ public class Board extends JPanel implements ActionListener {
 	  if (ppellet == true) {
 		  
 		  ++pelltimeup;
-		  System.out.println(pelltimeup);
 	   
-		  if (pelltimeup == pelltime+100) {
+		  if (pelltimeup == pelltime+250) {
 			  ppellet = false; 
-			  System.out.println("done!!!");
 		  }
 	  }
   }
@@ -313,8 +317,8 @@ public class Board extends JPanel implements ActionListener {
           pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
           ingame && ppellet) {
         dying = false;
-        ghostx[i] = 108;
-        ghosty[i] = 108;
+        ghostx[i] = 4 * blocksize;
+        ghosty[i] = 4 * blocksize;
         Sound sound = SoundFactory.getInstance(SOUND_EATGHOST);
         SoundFactory.play(sound);
       }
@@ -323,7 +327,15 @@ public class Board extends JPanel implements ActionListener {
 
 
   public void DrawGhost(Graphics2D g2d, int x, int y) {
-    g2d.drawImage(ghost, x, y, this);
+    if (ppellet == false) {
+	    
+    	g2d.drawImage(ghost, x, y, this);
+	    
+    } else if (ppellet == true) { 
+	    
+    	g2d.drawImage(pellghost, x, y, this);
+	    
+    }
   }
 
 
@@ -350,6 +362,12 @@ public class Board extends JPanel implements ActionListener {
         Sound sound = SoundFactory.getInstance(SOUND_CHOMP);
         SoundFactory.play(sound);
       }
+      if ((ch & 64) != 0) {
+          screendata[pos] = (short)(ch & 15);
+          score = score + 100;
+          Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
+          SoundFactory.play(sound);
+        }
 
       //changes the score when power pellet is eaten
       if ((ch & 32) != 0) {
@@ -359,13 +377,11 @@ public class Board extends JPanel implements ActionListener {
         ppellet = true;
         
         // new date/time
-  	  	peldatetime = new Date(); 
-  	  	// power pellet start time 
-  	  	pelltime = peldatetime.getTime();
-  	  	// power pellet start time for counter
-  	  	pelltimeup = peldatetime.getTime();
-        
-  	  	System.out.println("Ppellet is true now!");
+  	peldatetime = new Date(); 
+    	// power pellet start time 
+	pelltime = peldatetime.getTime();
+    	// power pellet start time for counter
+  	pelltimeup = peldatetime.getTime();
         
         Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
         SoundFactory.play(sound);
@@ -577,6 +593,7 @@ public class Board extends JPanel implements ActionListener {
   public void GetImages(){
 
     ghost = new ImageIcon(Board.class.getResource("/res/ghost_40.png")).getImage();
+    pellghost = new ImageIcon(Board.class.getResource("/res/pellghost.png")).getImage();
     pacman1 = new ImageIcon(Board.class.getResource("/res/pacman_44.png")).getImage();
     pacman2up = new ImageIcon(Board.class.getResource("/res/up1_44.png")).getImage();
     pacman3up = new ImageIcon(Board.class.getResource("/res/up2_44.png")).getImage();
