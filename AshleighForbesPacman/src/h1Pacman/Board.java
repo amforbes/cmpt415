@@ -45,6 +45,7 @@ public class Board extends JPanel implements ActionListener {
   Color mazecolor;
 
   boolean ingame = false;
+  boolean restart = false;
   boolean dying = false;
   boolean ppellet = false; 
 
@@ -194,6 +195,22 @@ public class Board extends JPanel implements ActionListener {
     g2d.setFont(small);
     g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
+	// restart screen
+  public void ShowRestartScreen(Graphics2D g2d) {
+
+	    g2d.setColor(new Color(0, 32, 48));
+	    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+	    g2d.setColor(Color.white);
+	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+
+	    String s = "You lost. Press s to restart game.";
+	    Font small = new Font("Helvetica", Font.BOLD, 25);
+	    FontMetrics metr = this.getFontMetrics(small);
+
+	    g2d.setColor(Color.white);
+	    g2d.setFont(small);
+	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+  }
 
   // displays the players score
   public void DrawScore(Graphics2D g) {
@@ -237,6 +254,7 @@ public class Board extends JPanel implements ActionListener {
     pacsleft--;
     if (pacsleft == 0)
       ingame = false;
+      restart = true;
     LevelContinue();
   }
 
@@ -591,6 +609,7 @@ public class Board extends JPanel implements ActionListener {
     viewdx = -1;
     viewdy = 0;
     dying = false;
+    restart = false; 
   }
 
   public void GetImages(){
@@ -625,10 +644,18 @@ public class Board extends JPanel implements ActionListener {
     DrawMaze(g2d);
     DrawScore(g2d);
     DoAnim();
-    if (ingame)
+	  
+    if (ingame) {
+    	
       PlayGame(g2d);
-    else
+      
+    }
+    else if (restart = false) {
       ShowIntroScreen(g2d);
+    }
+    else if (restart = true) {
+        ShowRestartScreen(g2d);
+    }
 
     g.drawImage(ii, 5, 5, this);
     Toolkit.getDefaultToolkit().sync();
