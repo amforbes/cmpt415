@@ -41,6 +41,7 @@ public class Board extends JPanel implements ActionListener {
   FontMetrics fmsmall, fmlarge;
   Image ii;
   Color dotcolor = new Color(192, 192, 0);
+  Color pelletcolor = new Color(255,255,255);
   Color mazecolor;
 
   boolean ingame = false;
@@ -533,10 +534,10 @@ public class Board extends JPanel implements ActionListener {
           g2d.setColor(dotcolor);
           g2d.fillRect(x + 11, y + 11, 4, 4);
         }
-        if ((screendata[i] & 32) != 0) // draws point
+        if ((screendata[i] & 32) != 0) // draws power pellet
         {
-          g2d.setColor(dotcolor);
-          g2d.fillRect(x + 10, y + 10, 8, 8);
+          g2d.setColor(pelletcolor);
+          g2d.fillOval(x + 8, y + 8, 15, 15);
         }
         if ((screendata[i] & 64) != 0) { //draws cherry
           g2d.drawImage(cherries, x, y, this);
