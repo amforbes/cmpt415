@@ -66,6 +66,8 @@ public class Board extends JPanel implements ActionListener {
   int[] dx, dy;
   int[] ghostx, ghosty, ghostdx, ghostdy, ghostspeed;
   int cherriesx, cherriesy;
+	
+  int level; 
 
   Image ghost;
   Image pacman1, pacman2up, pacman2left, pacman2right, pacman2down;
@@ -87,8 +89,10 @@ public class Board extends JPanel implements ActionListener {
   // 2 right
   // 4 top 
   // 8 bottom
-  final short leveldata[] =
-    { 35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
+	
+  // the second "level" is a fake level to show the change. You can put in as many levels as you need in this format
+  final short leveldata[] [] =
+    { {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 
         21, 0,  0,  0,  17, 16, 16, 24, 16, 16, 16, 16, 16, 16, 20, 
@@ -102,7 +106,24 @@ public class Board extends JPanel implements ActionListener {
         1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
         1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
         1,  41, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
-        9,  8,  8,  8,  8,  8,  8,  8,  8,  8,  25, 24, 24, 24, 44 };
+        9,  8,  8,  8,  8,  8,  8,  8,  8,  8,  25, 24, 24, 24, 44 },
+       
+    	{35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
+            21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
+            21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 
+            21, 0,  0,  0,  17, 16, 0, 0, 0, 0, 0, 0, 0, 0, 20, 
+            17, 18, 18, 18, 16, 16, 0, 0,  0, 0, 0, 0, 0, 0, 20,
+            17, 16, 16, 16, 16, 16, 0, 0,  0, 0, 0, 0, 0, 0, 20, 
+            25, 16, 16, 16, 24, 24, 0, 0,  0, 0, 0, 0, 0, 0,  21, 
+            1,  17, 16, 20, 0,  0,  0,  0,  0,  0,  0,  0, 20, 0,  21,
+            1,  17, 16, 16, 18, 18, 22, 0,  0, 0, 0, 0, 20, 0,  21,
+            1,  17, 16, 16, 16, 16, 20, 0,  0, 16, 16, 16, 20, 0,  21, 
+            1,  17, 16, 16, 16, 16, 20, 0,  0, 16, 16, 64, 20, 0,  21,
+            1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
+            1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
+            1,  41, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
+            9,  8,  8,  8,  8,  8,  8,  8,  8,  8,  25, 24, 24, 24, 44 }
+    	}; 
 
   final int validspeeds[] = { 1, 2, 3, 4, 6, 8 };
   final int maxspeed = 6;
@@ -566,18 +587,20 @@ public class Board extends JPanel implements ActionListener {
   }
 
   public void GameInit() {
+    level = 0; 
     pacsleft = 3;
     score = 0;
     LevelInit();
     nrofghosts = 6;
     currentspeed = 3;
+    restart = false; 
   }
 
 
   public void LevelInit() {
     int i;
     for (i = 0; i < nrofblocks * nrofblocks; i++)
-      screendata[i] = leveldata[i];
+      screendata[i] = leveldata[level][i];
 
     LevelContinue();
   }
@@ -634,6 +657,7 @@ public class Board extends JPanel implements ActionListener {
 
   public void paint(Graphics g)
   {
+    int i; 
     super.paint(g);
 
     Graphics2D g2d = (Graphics2D) g;
@@ -655,6 +679,14 @@ public class Board extends JPanel implements ActionListener {
     }
     else if (restart == true) {
         ShowRestartScreen(g2d);
+	    
+	if (level < leveldata.length - 1) {
+            level += 1; 
+        	
+	    for(i = 0; i < nrofblocks * nrofblocks; i++) {
+        	screendata[i] = leveldata[level][i];
+            }
+        }
     }
 
     g.drawImage(ii, 5, 5, this);
