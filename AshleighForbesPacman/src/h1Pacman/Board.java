@@ -609,7 +609,7 @@ public class Board extends JPanel implements ActionListener {
     viewdx = -1;
     viewdy = 0;
     dying = false;
-    restart = false; 
+    restart = true; 
   }
 
   public void GetImages(){
@@ -650,10 +650,10 @@ public class Board extends JPanel implements ActionListener {
       PlayGame(g2d);
       
     }
-    else if (restart = false) {
+    else if (restart == false) {
       ShowIntroScreen(g2d);
     }
-    else if (restart = true) {
+    else if (restart == true) {
         ShowRestartScreen(g2d);
     }
 
