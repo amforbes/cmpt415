@@ -737,7 +737,7 @@ public class Board extends JPanel implements ActionListener {
     else if (restart == true) {
         ShowRestartScreen(g2d);
 	    
-	if (level < leveldata.length - 1) {
+	    if (level < leveldata.length - 1) {
             level += 1; 
         	
 	    for(i = 0; i < nrofblocks * nrofblocks; i++) {
