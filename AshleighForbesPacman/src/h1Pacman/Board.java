@@ -93,7 +93,7 @@ public class Board extends JPanel implements ActionListener {
   // 4 top 
   // 8 bottom
 	
-  // the second "level" is a fake level to show the change. You can put in as many levels as you need in this format
+  // levels
   final short leveldata[] [] =
     { {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
         21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
@@ -198,8 +198,7 @@ public class Board extends JPanel implements ActionListener {
   long pelltime; 
   long pelltimeup; 
   
-
-
+	
   public Board() {
 
     GetImages();
@@ -257,8 +256,6 @@ public class Board extends JPanel implements ActionListener {
       DrawPacMan(g2d);
       moveGhosts(g2d);
       CheckMaze();
-//      Sound sound = SoundFactory.getInstance(SOUND_CHOMP);
-//      sound.play();
     }
   }
 
@@ -485,8 +482,6 @@ public class Board extends JPanel implements ActionListener {
   public void MovePacMan() {
     int pos;
     short ch;
-//    Sound sound = SoundFactory.getInstance(SOUND_);
-//    SoundFactory.play(sound);
 
     if (reqdx == -pacmandx && reqdy == -pacmandy) {
       pacmandx = reqdx;
@@ -754,6 +749,7 @@ public class Board extends JPanel implements ActionListener {
     restart = true; 
   }
 
+	//all the images for the game
   public void GetImages(){
 
     ghost = new ImageIcon(Board.class.getResource("/res/ghost.png")).getImage();
