@@ -708,7 +708,7 @@ public class Board extends JPanel implements ActionListener {
     	for (i = 0; i < nrofblocks * nrofblocks; i++)
     	      screendata[i] = leveldata[level][i];
     }
-    
+    pacsleft = 3;
     
     if (state == State.NEXT) {
     	if (level < leveldata.length - 1) {
