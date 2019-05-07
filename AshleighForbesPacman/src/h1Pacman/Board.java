@@ -758,7 +758,7 @@ public class Board extends JPanel implements ActionListener {
 
     ghost = new ImageIcon(Board.class.getResource("/res/ghost.png")).getImage();
     pellghost = new ImageIcon(Board.class.getResource("/res/pellghost.png")).getImage();
-    pacman1 = new ImageIcon(Board.class.getResource("/res/pacman_44.png")).getImage();
+    pacman1 = new ImageIcon(Board.class.getResource("/res/pacman_test_44.png")).getImage();
     pacman2up = new ImageIcon(Board.class.getResource("/res/up1_44.png")).getImage();
     pacman3up = new ImageIcon(Board.class.getResource("/res/up2_44.png")).getImage();
     pacman4up = new ImageIcon(Board.class.getResource("/res/up3_44.png")).getImage();
