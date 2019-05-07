@@ -75,6 +75,9 @@ public class Board extends JPanel implements ActionListener {
   Image pacman4up, pacman4down, pacman4left, pacman4right;
   Image cherries;
   Image pellghost;
+	
+  public enum State {NONE, START, NEXT, RESTART, WIN}; 
+  private State state = State.NONE;
 
   int pacmanx, pacmany, pacmandx, pacmandy;
   int reqdx, reqdy, viewdx, viewdy;
@@ -212,7 +215,8 @@ public class Board extends JPanel implements ActionListener {
     setBackground(Color.black);
     setDoubleBuffered(true);
 
-
+    state = State.NONE; 
+	  
     ghostx = new int[maxghosts];
     ghostdx = new int[maxghosts];
     ghosty = new int[maxghosts];
@@ -243,6 +247,7 @@ public class Board extends JPanel implements ActionListener {
 
   public void PlayGame(Graphics2D g2d) {
     if (dying) {
+      state = State.RESTART;
       Death();
       Sound sound = SoundFactory.getInstance(SOUND_DEATH);
       SoundFactory.play(sound);
@@ -289,6 +294,36 @@ public class Board extends JPanel implements ActionListener {
 	    g2d.setFont(small);
 	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
+  public void ShowNextScreen(Graphics2D g2d) {
+
+	    g2d.setColor(new Color(0, 32, 48));
+	    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+	    g2d.setColor(Color.white);
+	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+
+	    String s = "You won. Press s to continue to the next level.";
+	    Font small = new Font("Helvetica", Font.BOLD, 25);
+	    FontMetrics metr = this.getFontMetrics(small);
+
+	    g2d.setColor(Color.white);
+	    g2d.setFont(small);
+	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+  }
+  public void ShowWinScreen(Graphics2D g2d) {
+
+	    g2d.setColor(new Color(0, 32, 48));
+	    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+	    g2d.setColor(Color.white);
+	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+
+	    String s = "You won. Press s to restart.";
+	    Font small = new Font("Helvetica", Font.BOLD, 25);
+	    FontMetrics metr = this.getFontMetrics(small);
+
+	    g2d.setColor(Color.white);
+	    g2d.setFont(small);
+	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+  }
 
   // displays the players score
   public void DrawScore(Graphics2D g) {
@@ -319,6 +354,13 @@ public class Board extends JPanel implements ActionListener {
     if (finished) {
       score += 50;
 
+      //Checks if its on Level 5 and if it is state is win screen. if not state is next level
+      if (level == 4) {
+    	  state = State.WIN; 
+      } else if (level != 4) {
+    	  state = State.NEXT; 
+      }
+      
       if (nrofghosts < maxghosts)
         nrofghosts++;
       if (currentspeed < maxspeed)
@@ -330,9 +372,13 @@ public class Board extends JPanel implements ActionListener {
   public void Death() {
 
     pacsleft--;
-    if (pacsleft == 0)
+    if (pacsleft == 0) {
       ingame = false;
       restart = true;
+      state = State.RESTART; 
+      LevelInit(); 
+    }
+    
     LevelContinue();
   }
 
@@ -644,7 +690,8 @@ public class Board extends JPanel implements ActionListener {
   }
 
   public void GameInit() {
-    level = 0; 
+    state = State.START; 
+	level = 0; 
     pacsleft = 3;
     score = 0;
     LevelInit();
@@ -656,8 +703,23 @@ public class Board extends JPanel implements ActionListener {
 
   public void LevelInit() {
     int i;
-    for (i = 0; i < nrofblocks * nrofblocks; i++)
-      screendata[i] = leveldata[level][i];
+    
+    if (state == State.START || state == State.RESTART) {
+    	for (i = 0; i < nrofblocks * nrofblocks; i++)
+    	      screendata[i] = leveldata[level][i];
+    }
+    
+    
+    if (state == State.NEXT) {
+    	if (level < leveldata.length - 1) {
+            level += 1; 
+        	
+	    for(i = 0; i < nrofblocks * nrofblocks; i++) {
+        	screendata[i] = leveldata[level][i];
+            }
+        }
+    	pacsleft = 3; 
+    }
 
     LevelContinue();
   }
@@ -713,8 +775,7 @@ public class Board extends JPanel implements ActionListener {
   }
 
   public void paint(Graphics g)
-  {
-    int i; 
+  { 
     super.paint(g);
 
     Graphics2D g2d = (Graphics2D) g;
@@ -731,21 +792,20 @@ public class Board extends JPanel implements ActionListener {
       PlayGame(g2d);
       
     }
-    else if (restart == false) {
+    else if (state == State.START) {
       ShowIntroScreen(g2d);
     }
-    else if (restart == true) {
+    else if (state == State.RESTART) {
         ShowRestartScreen(g2d);
-	    
-	    if (level < leveldata.length - 1) {
-            level += 1; 
-        	
-	    for(i = 0; i < nrofblocks * nrofblocks; i++) {
-        	screendata[i] = leveldata[level][i];
-            }
-        }
+        
+    } else if (state == State.NEXT) {
+        ShowNextScreen(g2d);
+        
+    }else if (state == State.WIN) {
+        ShowWinScreen(g2d);
     }
-
+	
+	  
     g.drawImage(ii, 5, 5, this);
     Toolkit.getDefaultToolkit().sync();
     g.dispose();
@@ -793,7 +853,7 @@ public class Board extends JPanel implements ActionListener {
         if (key == 's' || key == 'S')
         {
           ingame=true;
-          GameInit();
+          LevelInit();
         }
       }
     }
