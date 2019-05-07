@@ -76,7 +76,7 @@ public class Board extends JPanel implements ActionListener {
   Image cherries;
   Image pellghost;
 	
-  public enum State {NONE, START, NEXT, RESTART, WIN}; 
+  public enum State {NONE, START, NEXT, RESTART, DONE}; 
   private State state = State.NONE;
 
   int pacmanx, pacmany, pacmandx, pacmandy;
@@ -349,19 +349,21 @@ public class Board extends JPanel implements ActionListener {
     }
     // when all pellets are eaten, move to next level
     if (finished) {
-      score += 50;
-
+	    
       //Checks if its on Level 5 and if it is state is win screen. if not state is next level
-      if (level == 4) {
-    	  state = State.WIN; 
-      } else if (level != 4) {
-    	  state = State.NEXT; 
+      if (level == leveldata.length - 1) {
+            ingame = false;
+	    state = State.DONE;
+      } else if (level < leveldata.length - 1) {
+	    state = State.NEXT; 
       }
       
-      if (nrofghosts < maxghosts)
+      if (nrofghosts < maxghosts){
         nrofghosts++;
-      if (currentspeed < maxspeed)
+      }
+      if (currentspeed < maxspeed){
         currentspeed++;
+      }
       LevelInit();
     }
   }
@@ -686,7 +688,7 @@ public class Board extends JPanel implements ActionListener {
 
   public void GameInit() {
     state = State.START; 
-	level = 0; 
+    level = 0; 
     pacsleft = 3;
     score = 0;
     LevelInit();
@@ -698,13 +700,13 @@ public class Board extends JPanel implements ActionListener {
 
   public void LevelInit() {
     int i;
-    
+    //if state is start or restart, reset the level
     if (state == State.START || state == State.RESTART) {
     	for (i = 0; i < nrofblocks * nrofblocks; i++)
     	      screendata[i] = leveldata[level][i];
     }
     pacsleft = 3;
-    
+    //if state is next, move to the next level
     if (state == State.NEXT) {
     	if (level < leveldata.length - 1) {
             level += 1; 
@@ -715,6 +717,12 @@ public class Board extends JPanel implements ActionListener {
         }
     	pacsleft = 3; 
     }
+    //if state is done, set level 1 and redraw maze
+    if (state == State.DONE) {
+	level = 0; 
+	for (i = 0; i < nrofblocks * nrofblocks; i++)
+	     screendata[i] = leveldata[level][i];
+     }
 
     LevelContinue();
   }
@@ -782,22 +790,22 @@ public class Board extends JPanel implements ActionListener {
     DrawMaze(g2d);
     DrawScore(g2d);
     DoAnim();
-	  
+
+    //next level memo
     if (ingame) {
+      if (state == State.NEXT) {
+	ShowNextScreen(g2d);
+      }
     	
       PlayGame(g2d);
       
-    }
-    else if (state == State.START) {
-      ShowIntroScreen(g2d);
-    }
-    else if (state == State.RESTART) {
-        ShowRestartScreen(g2d);
-        
-    } else if (state == State.NEXT) {
-        ShowNextScreen(g2d);
-        
-    }else if (state == State.WIN) {
+    } else if (state == State.START) {
+      	ShowIntroScreen(g2d);
+	    
+    } else if (state == State.RESTART) {
+        ShowRestartScreen(g2d); 
+	    
+    } else if (state == State.DONE) {
         ShowWinScreen(g2d);
     }
 	
@@ -842,6 +850,11 @@ public class Board extends JPanel implements ActionListener {
           if (timer.isRunning())
             timer.stop();
           else timer.start();
+	}
+	if (key == 's' || key == 'S')
+        {
+          state = State.NONE;
+          LevelInit();
         }
       }
       else
