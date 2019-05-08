@@ -45,7 +45,6 @@ public class Board extends JPanel implements ActionListener {
   Color mazecolor;
 
   boolean ingame = false;
-  boolean restart = false;
   boolean dying = false;
   boolean ppellet = false; 
 
@@ -373,7 +372,6 @@ public class Board extends JPanel implements ActionListener {
     pacsleft--;
     if (pacsleft == 0) {
       ingame = false;
-      restart = true;
       state = State.RESTART; 
       LevelInit(); 
     }
@@ -694,7 +692,7 @@ public class Board extends JPanel implements ActionListener {
     LevelInit();
     nrofghosts = 6;
     currentspeed = 3;
-    restart = false; 
+     
   }
 
 
@@ -754,7 +752,7 @@ public class Board extends JPanel implements ActionListener {
     viewdx = -1;
     viewdy = 0;
     dying = false;
-    restart = true; 
+    
   }
 
 	//all the images for the game
