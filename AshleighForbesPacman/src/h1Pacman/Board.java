@@ -345,7 +345,7 @@ public class Board extends JPanel implements ActionListener {
     g.setColor(new Color(96, 128, 255));
     s = "Score: " + score;
     h = "Highscore: " + highscore;
-    g.drawString(s, scrsize / 6 + 192, scrsize + 30);
+    g.drawString(s, scrsize / 6 + 125, scrsize + 30);
     for (i = 0; i < pacsleft; i++) {
       g.drawImage(pacman3left, i * 56 + 18, scrsize + 2, this);
     }
@@ -785,7 +785,6 @@ public class Board extends JPanel implements ActionListener {
 	for (i = 0; i < nrofblocks * nrofblocks; i++)
 	     screendata[i] = leveldata[level][i];
      }
-
     LevelContinue();
   }
 
@@ -861,13 +860,16 @@ public class Board extends JPanel implements ActionListener {
     	
       PlayGame(g2d);
       
-    } else if (state == State.START) {
+    }
+	  else if (state == State.START) {
       	ShowIntroScreen(g2d);
 	    
-    } else if (state == State.RESTART) {
+    } 
+	  else if (state == State.RESTART) {
         ShowRestartScreen(g2d); 
 	    
-    } else if (state == State.DONE) {
+    } 
+	  else if (state == State.DONE) {
         ShowWinScreen(g2d);
     }
     if(highscore.equals("")) {
@@ -961,7 +963,7 @@ public class Board extends JPanel implements ActionListener {
       return reader.readLine();
     } 
     catch (Exception e) {
-      return "Nobody:0";
+      return "Nobody: 0";
     }
     finally {
       try {
