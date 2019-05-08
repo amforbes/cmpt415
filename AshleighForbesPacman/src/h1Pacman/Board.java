@@ -39,16 +39,16 @@ import sf.SoundFactory;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel implements ActionListener {
-  
+
   //sounds
   public final static String DIR = "src/res/";
   public final static String SOUND_CHOMP = DIR + "pacman_chomp.wav";
   public final static String SOUND_DEATH = DIR + "pacman_death.wav";
   public final static String SOUND_EATGHOST = DIR + "pacman_eatghost.wav";
   public final static String SOUND_POWERUP = DIR + "pacman_eatfruit.wav";
-	
+
   private String highscore = "";
-  
+
   Dimension d;
   Font smallfont = new Font("Helvetica", Font.BOLD, 20);
 
@@ -79,7 +79,7 @@ public class Board extends JPanel implements ActionListener {
   int[] dx, dy;
   int[] ghostx, ghosty, ghostdx, ghostdy, ghostspeed;
   int cherriesx, cherriesy;
-	
+
   int level; 
 
   Image ghost;
@@ -88,7 +88,7 @@ public class Board extends JPanel implements ActionListener {
   Image pacman4up, pacman4down, pacman4left, pacman4right;
   Image cherries;
   Image pellghost;
-	
+
   public enum State {NONE, START, NEXT, RESTART, DONE}; 
   private State state = State.NONE;
 
@@ -100,103 +100,103 @@ public class Board extends JPanel implements ActionListener {
   // 41 bottom left
   // 38 top right
   // 44 bottom right
-	
+
   // 1 left
   // 2 right
   // 4 top 
   // 8 bottom
-	
+
   // levels
   final short leveldata[] [] =
     { {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
-        21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
-        21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 
-        21, 0,  0,  0,  17, 16, 16, 24, 16, 16, 16, 16, 16, 16, 20, 
-        17, 18, 18, 18, 16, 16, 20, 0,  17, 16, 16, 16, 16, 16, 20,
-        17, 16, 16, 16, 16, 16, 20, 0,  17, 16, 16, 16, 16, 24, 20, 
-        25, 16, 16, 16, 24, 24, 28, 0,  25, 24, 24, 16, 20, 0,  21, 
-        1,  17, 16, 20, 0,  0,  0,  0,  0,  0,  0,  17, 20, 0,  21,
-        1,  17, 16, 16, 18, 18, 22, 0,  19, 18, 18, 16, 20, 0,  21,
-        1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 16, 20, 0,  21, 
-        1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 64, 20, 0,  21,
-        1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
-        1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
-        1,  41, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
-        9,  8,  8,  8,  8,  8,  8,  8,  8,  8,  25, 24, 24, 24, 44 },
+      21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
+      21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 
+      21, 0,  0,  0,  17, 16, 16, 24, 16, 16, 16, 16, 16, 16, 20, 
+      17, 18, 18, 18, 16, 16, 20, 0,  17, 16, 16, 16, 16, 16, 20,
+      17, 16, 16, 16, 16, 16, 20, 0,  17, 16, 16, 16, 16, 24, 20, 
+      25, 16, 16, 16, 24, 24, 28, 0,  25, 24, 24, 16, 20, 0,  21, 
+      1,  17, 16, 20, 0,  0,  0,  0,  0,  0,  0,  17, 20, 0,  21,
+      1,  17, 16, 16, 18, 18, 22, 0,  19, 18, 18, 16, 20, 0,  21,
+      1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 16, 20, 0,  21, 
+      1,  17, 16, 16, 16, 16, 20, 0,  17, 16, 16, 64, 20, 0,  21,
+      1,  17, 16, 16, 16, 16, 16, 18, 16, 16, 16, 16, 20, 0,  21,
+      1,  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
+      1,  41, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 18, 20,
+      9,  8,  8,  8,  8,  8,  8,  8,  8,  8,  25, 24, 24, 24, 44 },
 
-  // level two
-     
-     {35, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
-      17, 16, 24, 16, 16, 24, 16, 16, 24, 24, 24, 24, 24, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 20,  0,  0,  0,  0,  0, 17, 20,
-      17, 20,  0, 17, 20,  0, 17, 16, 18, 22,  0, 19, 18, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0, 25, 28,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0,  0,  0,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0, 19, 22,  0, 17, 64, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 16, 24, 28,  0, 25, 24, 16, 20,
-      17, 20,  0, 17, 20,  0, 17, 20,  0,  0,  0,  0,  0, 17, 20,
-      17, 16, 18, 16, 16, 18, 16, 16, 18, 18, 18, 18, 18, 16, 20,
-      41, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 44 },
-     
-     // level three
-     
-     {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 26, 18, 18, 38,
-      21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 20,
-      21, 0,  0,  0,  17, 16, 16, 64, 16, 16, 20,  0, 17, 16, 20,
-      21, 0,  0,  0,  17, 16, 24, 24, 24, 16, 20,  0, 17, 16, 20,
-      17, 18, 18, 18, 16, 20,  0,  0,  0, 17, 20,  0, 17, 16, 20,
-      17, 16, 16, 16, 16, 16, 22,  0, 19, 16, 20,  0, 17, 24, 20,
-      25, 16, 16, 24, 16, 16, 20,  0, 17, 16, 20,  0, 21, 0,  21,
-      1,  17, 20,  0, 17, 16, 16, 18, 16, 16, 20,  0, 21, 0,  21,
-      1,  17, 20,  0, 17, 16, 16, 16, 16, 16, 16, 18, 20, 0,  21,
-      1,  17, 20,  0, 17, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
-      1,  17, 20,  0, 17, 16, 16, 16, 16, 24, 24, 16, 20, 0,  21,
-      1,  17, 16, 18, 16, 16, 16, 16, 20,  0,  0, 17, 20, 0,  21,
-      1,  17, 16, 16, 16, 16, 16, 16, 20,  0,  0, 17, 20, 0,  21,
-      1,  41, 24, 24, 24, 16, 16, 16, 16, 18, 18, 16, 16, 18, 20,
-      9,  8,  8,  8,  8,  25, 24, 24, 24, 24, 24, 24, 24, 24, 44 },
-     
-     //level four
-     
-     {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 26, 18, 38,
-      21,  0,  0,  0, 17, 16, 16, 16, 16, 16, 16, 28,  0, 25, 20,
-      21,  0,  0,  0, 17, 16, 16, 16, 16, 16, 20,  0,  0,  0, 21,
-      21,  0,  0,  0, 17, 16, 16, 24, 16, 16, 16, 22,  0, 19, 20,
-      17, 18, 18, 18, 16, 16, 20,  0, 17, 16, 16, 16, 18, 16, 20,
-      17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 16, 16, 16, 16, 20,
-      17, 16, 16, 16, 24, 24, 28,  0, 25, 24, 24, 16, 16, 16, 20,
-      17, 16, 16, 20,  0,  0,  0,  0,  0,  0,  0, 17, 16, 16, 20,
-      17, 16, 16, 16, 18, 18, 22,  0, 19, 18, 18, 16, 16, 16, 20,
-      17, 16, 16, 16, 16, 16, 20,  0, 17, 64, 16, 16, 16, 16, 20,
-      17, 16, 24, 16, 16, 16, 20,  0, 17, 16, 16, 24, 24, 24, 20,
-      17, 28,  0, 25, 16, 16, 16, 18, 16, 16, 20,  0,  0,  0, 21,
-      21,  0,  0,  0, 17, 16, 16, 16, 16, 16, 20,  0,  0,  0, 21,
-      17, 22,  0, 19, 16, 16, 16, 16, 16, 16, 20,  0,  0,  0, 21,
-      41, 24, 26, 24, 24, 24, 24, 24, 24, 24, 24, 26, 26, 26, 44 },
-     
-     //level five
-     
-     {35, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
-      17, 16, 16, 16, 24, 16, 16, 16, 16, 16, 24, 16, 16, 16, 20,
-      17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
-      17, 16, 16, 16, 18, 16, 16, 16, 16, 16, 18, 16, 16, 16, 20,
-      17, 16, 16, 24, 16, 16, 16, 64, 16, 16, 16, 24, 16, 16, 20,
-      17, 16, 20,  0, 17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 20,
-      17, 16, 20,  0, 17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 20,
-      17, 16, 20,  0, 25, 24, 24, 24, 24, 24, 28,  0, 17, 16, 20,
-      17, 16, 20,  0,  0,  0,  0,  0,  0,  0,  0,  0, 17, 16, 20,
-      17, 16, 16, 18, 18, 18, 18, 18, 18, 18, 18, 18, 16, 16, 20,
-      41, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 44 }
-     
-    	}; 
+        // level two
+
+        {35, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
+        17, 16, 24, 16, 16, 24, 16, 16, 24, 24, 24, 24, 24, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 20,  0,  0,  0,  0,  0, 17, 20,
+        17, 20,  0, 17, 20,  0, 17, 16, 18, 22,  0, 19, 18, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0, 25, 28,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0,  0,  0,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0, 19, 22,  0, 17, 64, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 16, 16, 20,  0, 17, 16, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 16, 24, 28,  0, 25, 24, 16, 20,
+        17, 20,  0, 17, 20,  0, 17, 20,  0,  0,  0,  0,  0, 17, 20,
+        17, 16, 18, 16, 16, 18, 16, 16, 18, 18, 18, 18, 18, 16, 20,
+        41, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 44 },
+
+        // level three
+
+        {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 26, 18, 18, 38,
+          21, 0,  0,  0,  17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 20,
+          21, 0,  0,  0,  17, 16, 16, 64, 16, 16, 20,  0, 17, 16, 20,
+          21, 0,  0,  0,  17, 16, 24, 24, 24, 16, 20,  0, 17, 16, 20,
+          17, 18, 18, 18, 16, 20,  0,  0,  0, 17, 20,  0, 17, 16, 20,
+          17, 16, 16, 16, 16, 16, 22,  0, 19, 16, 20,  0, 17, 24, 20,
+          25, 16, 16, 24, 16, 16, 20,  0, 17, 16, 20,  0, 21, 0,  21,
+          1,  17, 20,  0, 17, 16, 16, 18, 16, 16, 20,  0, 21, 0,  21,
+          1,  17, 20,  0, 17, 16, 16, 16, 16, 16, 16, 18, 20, 0,  21,
+          1,  17, 20,  0, 17, 16, 16, 16, 16, 16, 16, 16, 20, 0,  21,
+          1,  17, 20,  0, 17, 16, 16, 16, 16, 24, 24, 16, 20, 0,  21,
+          1,  17, 16, 18, 16, 16, 16, 16, 20,  0,  0, 17, 20, 0,  21,
+          1,  17, 16, 16, 16, 16, 16, 16, 20,  0,  0, 17, 20, 0,  21,
+          1,  41, 24, 24, 24, 16, 16, 16, 16, 18, 18, 16, 16, 18, 20,
+          9,  8,  8,  8,  8,  25, 24, 24, 24, 24, 24, 24, 24, 24, 44 },
+
+        //level four
+
+        {35, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 26, 18, 38,
+            21,  0,  0,  0, 17, 16, 16, 16, 16, 16, 16, 28,  0, 25, 20,
+            21,  0,  0,  0, 17, 16, 16, 16, 16, 16, 20,  0,  0,  0, 21,
+            21,  0,  0,  0, 17, 16, 16, 24, 16, 16, 16, 22,  0, 19, 20,
+            17, 18, 18, 18, 16, 16, 20,  0, 17, 16, 16, 16, 18, 16, 20,
+            17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 16, 16, 16, 16, 20,
+            17, 16, 16, 16, 24, 24, 28,  0, 25, 24, 24, 16, 16, 16, 20,
+            17, 16, 16, 20,  0,  0,  0,  0,  0,  0,  0, 17, 16, 16, 20,
+            17, 16, 16, 16, 18, 18, 22,  0, 19, 18, 18, 16, 16, 16, 20,
+            17, 16, 16, 16, 16, 16, 20,  0, 17, 64, 16, 16, 16, 16, 20,
+            17, 16, 24, 16, 16, 16, 20,  0, 17, 16, 16, 24, 24, 24, 20,
+            17, 28,  0, 25, 16, 16, 16, 18, 16, 16, 20,  0,  0,  0, 21,
+            21,  0,  0,  0, 17, 16, 16, 16, 16, 16, 20,  0,  0,  0, 21,
+            17, 22,  0, 19, 16, 16, 16, 16, 16, 16, 20,  0,  0,  0, 21,
+            41, 24, 26, 24, 24, 24, 24, 24, 24, 24, 24, 26, 26, 26, 44 },
+
+        //level five
+
+        {35, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 38,
+              17, 16, 16, 16, 24, 16, 16, 16, 16, 16, 24, 16, 16, 16, 20,
+              17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
+              17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
+              17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
+              17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
+              17, 16, 16, 20,  0, 17, 16, 16, 16, 20,  0, 17, 16, 16, 20,
+              17, 16, 16, 16, 18, 16, 16, 16, 16, 16, 18, 16, 16, 16, 20,
+              17, 16, 16, 24, 16, 16, 16, 64, 16, 16, 16, 24, 16, 16, 20,
+              17, 16, 20,  0, 17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 20,
+              17, 16, 20,  0, 17, 16, 16, 16, 16, 16, 20,  0, 17, 16, 20,
+              17, 16, 20,  0, 25, 24, 24, 24, 24, 24, 28,  0, 17, 16, 20,
+              17, 16, 20,  0,  0,  0,  0,  0,  0,  0,  0,  0, 17, 16, 20,
+              17, 16, 16, 18, 18, 18, 18, 18, 18, 18, 18, 18, 16, 16, 20,
+              41, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 44 }
+
+    }; 
 
   final int validspeeds[] = { 1, 2, 3, 4, 6, 8 };
   final int maxspeed = 6;
@@ -205,13 +205,13 @@ public class Board extends JPanel implements ActionListener {
   short[] screendata;
   Timer timer; 
   Date peldatetime;
-  
+
   //pelltime is the original time the pellet was eaten
   //pelltimeup is the number that is incremented if ppellet is true
   long pelltime; 
   long pelltimeup; 
-  
-	
+
+
   public Board() {
 
     GetImages();
@@ -228,7 +228,7 @@ public class Board extends JPanel implements ActionListener {
     setDoubleBuffered(true);
 
     state = State.NONE; 
-	  
+
     ghostx = new int[maxghosts];
     ghostdx = new int[maxghosts];
     ghosty = new int[maxghosts];
@@ -288,51 +288,51 @@ public class Board extends JPanel implements ActionListener {
     g2d.setFont(small);
     g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
-	// restart screen
+  // restart screen
   public void ShowRestartScreen(Graphics2D g2d) {
 
-	    g2d.setColor(new Color(0, 32, 48));
-	    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
-	    g2d.setColor(Color.white);
-	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+    g2d.setColor(new Color(0, 32, 48));
+    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+    g2d.setColor(Color.white);
+    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	    String s = "Game Over. You lost. Press s to restart";
-	    Font small = new Font("Helvetica", Font.BOLD, 25);
-	    FontMetrics metr = this.getFontMetrics(small);
+    String s = "Game Over. You lost. Press s to restart";
+    Font small = new Font("Helvetica", Font.BOLD, 25);
+    FontMetrics metr = this.getFontMetrics(small);
 
-	    g2d.setColor(Color.white);
-	    g2d.setFont(small);
-	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+    g2d.setColor(Color.white);
+    g2d.setFont(small);
+    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
   public void ShowNextScreen(Graphics2D g2d) {
 
-	    g2d.setColor(new Color(0, 32, 48));
-	    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
-	    g2d.setColor(Color.white);
-	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+    g2d.setColor(new Color(0, 32, 48));
+    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+    g2d.setColor(Color.white);
+    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	    String s = "Nice Job! Press s to continue to the next level.";
-	    Font small = new Font("Helvetica", Font.BOLD, 25);
-	    FontMetrics metr = this.getFontMetrics(small);
+    String s = "Nice Job! Press s to continue to the next level.";
+    Font small = new Font("Helvetica", Font.BOLD, 25);
+    FontMetrics metr = this.getFontMetrics(small);
 
-	    g2d.setColor(Color.white);
-	    g2d.setFont(small);
-	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+    g2d.setColor(Color.white);
+    g2d.setFont(small);
+    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
   public void ShowWinScreen(Graphics2D g2d) {
 
-	    g2d.setColor(new Color(0, 32, 48));
-	    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
-	    g2d.setColor(Color.white);
-	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+    g2d.setColor(new Color(0, 32, 48));
+    g2d.fillRect(50, scrsize / 2 - 30, scrsize - 100, 50);
+    g2d.setColor(Color.white);
+    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	    String s = "You won!! Press s to restart.";
-	    Font small = new Font("Helvetica", Font.BOLD, 25);
-	    FontMetrics metr = this.getFontMetrics(small);
+    String s = "You won!! Press s to restart.";
+    Font small = new Font("Helvetica", Font.BOLD, 25);
+    FontMetrics metr = this.getFontMetrics(small);
 
-	    g2d.setColor(Color.white);
-	    g2d.setFont(small);
-	    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
+    g2d.setColor(Color.white);
+    g2d.setFont(small);
+    g2d.drawString(s, (scrsize - metr.stringWidth(s)) / 2, scrsize / 2);
   }
 
   // displays the players score
@@ -353,7 +353,7 @@ public class Board extends JPanel implements ActionListener {
   }
 
   public void CheckScore(){
-    
+
     if(highscore.equals("")) {
       return;
     }
@@ -361,7 +361,7 @@ public class Board extends JPanel implements ActionListener {
     if(score > Integer.parseInt((highscore.split(":")[1]))) {
       //user setting a new highscore
       String name = JOptionPane.showInputDialog("New Highscore! Enter name!");
-      highscore = " " + name + " : " + score;
+      highscore = name + ":" + score;
 
       File scoreFile = new File("highscore.dat");
       if(!scoreFile.exists()) {
@@ -408,17 +408,17 @@ public class Board extends JPanel implements ActionListener {
     }
     // when all pellets are eaten, move to next level
     if (finished) {
-	    
+
       //Checks if its on Level 5 and if it is state is win screen. if not state is next level
       if (level == leveldata.length - 1) {
-            ingame = false;
-	    state = State.DONE;
-	    CheckScore();
+        ingame = false;
+        state = State.DONE;
+        CheckScore();
       } 
       else if (level < leveldata.length - 1) {
-	    state = State.NEXT; 
+        state = State.NEXT; 
       }
-      
+
       if (nrofghosts < maxghosts){
         nrofghosts++;
       }
@@ -443,17 +443,17 @@ public class Board extends JPanel implements ActionListener {
   }
 
   public void PowerPelletTimer() {
-	  
-	  //while ppellet is true, check the time, this refreshes every time
-	  //the screen repaints to check if ppellet is true and ++pelltimeup
-	  if (ppellet == true) {
-		  
-		  ++pelltimeup;
-	   
-		  if (pelltimeup == pelltime+250) {
-			  ppellet = false; 
-		  }
-	  }
+
+    //while ppellet is true, check the time, this refreshes every time
+    //the screen repaints to check if ppellet is true and ++pelltimeup
+    if (ppellet == true) {
+
+      ++pelltimeup;
+
+      if (pelltimeup == pelltime+250) {
+        ppellet = false; 
+      }
+    }
   }
 
 
@@ -532,13 +532,13 @@ public class Board extends JPanel implements ActionListener {
 
   public void DrawGhost(Graphics2D g2d, int x, int y) {
     if (ppellet == false) {
-	    
-    	g2d.drawImage(ghost, x, y, this);
-	    
+
+      g2d.drawImage(ghost, x, y, this);
+
     } else if (ppellet == true) { 
-	    
-    	g2d.drawImage(pellghost, x, y, this);
-	    
+
+      g2d.drawImage(pellghost, x, y, this);
+
     }
   }
 
@@ -564,14 +564,14 @@ public class Board extends JPanel implements ActionListener {
         Sound sound = SoundFactory.getInstance(SOUND_CHOMP);
         SoundFactory.play(sound);
       }
-	    
+
       // cherry eating and bonus points
       if ((ch & 64) != 0) {
-          screendata[pos] = (short)(ch & 15);
-          score = score + 100;
-          Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
-          SoundFactory.play(sound);
-        }
+        screendata[pos] = (short)(ch & 15);
+        score = score + 100;
+        Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
+        SoundFactory.play(sound);
+      }
 
       //changes the score when power pellet is eaten
       if ((ch & 32) != 0) {
@@ -579,14 +579,14 @@ public class Board extends JPanel implements ActionListener {
         this.score = score + 50;
 
         ppellet = true;
-        
+
         // new date/time
-  	peldatetime = new Date(); 
-    	// power pellet start time 
-	pelltime = peldatetime.getTime();
-    	// power pellet start time for counter
-  	pelltimeup = peldatetime.getTime();
-        
+        peldatetime = new Date(); 
+        // power pellet start time 
+        pelltime = peldatetime.getTime();
+        // power pellet start time for counter
+        pelltimeup = peldatetime.getTime();
+
         Sound sound = SoundFactory.getInstance(SOUND_POWERUP);
         SoundFactory.play(sound);
       }
@@ -756,7 +756,7 @@ public class Board extends JPanel implements ActionListener {
     LevelInit();
     nrofghosts = 6;
     currentspeed = 3;
-     
+
   }
 
 
@@ -764,27 +764,27 @@ public class Board extends JPanel implements ActionListener {
     int i;
     //if state is start or restart, reset the level
     if (state == State.START || state == State.RESTART) {
-    	for (i = 0; i < nrofblocks * nrofblocks; i++)
-    	      screendata[i] = leveldata[level][i];
+      for (i = 0; i < nrofblocks * nrofblocks; i++)
+        screendata[i] = leveldata[level][i];
     }
     pacsleft = 3;
     //if state is next, move to the next level
     if (state == State.NEXT) {
-    	if (level < leveldata.length - 1) {
-            level += 1; 
-        	
-	    for(i = 0; i < nrofblocks * nrofblocks; i++) {
-        	screendata[i] = leveldata[level][i];
-            }
+      if (level < leveldata.length - 1) {
+        level += 1; 
+
+        for(i = 0; i < nrofblocks * nrofblocks; i++) {
+          screendata[i] = leveldata[level][i];
         }
-    pacsleft = 3; 
+      }
+      pacsleft = 3; 
     }
     //if state is done, set level 1 and redraw maze
     if (state == State.DONE) {
-	level = 0; 
-	for (i = 0; i < nrofblocks * nrofblocks; i++)
-	     screendata[i] = leveldata[level][i];
-     }
+      level = 0; 
+      for (i = 0; i < nrofblocks * nrofblocks; i++)
+        screendata[i] = leveldata[level][i];
+    }
     LevelContinue();
   }
 
@@ -815,10 +815,10 @@ public class Board extends JPanel implements ActionListener {
     viewdx = -1;
     viewdy = 0;
     dying = false;
-    
+
   }
 
-	//all the images for the game
+  //all the images for the game
   public void GetImages(){
 
     ghost = new ImageIcon(Board.class.getResource("/res/ghost.png")).getImage();
@@ -855,29 +855,29 @@ public class Board extends JPanel implements ActionListener {
     //next level memo
     if (ingame) {
       if (state == State.NEXT) {
-	ShowNextScreen(g2d);
+        ShowNextScreen(g2d);
       }
-    	
+
       PlayGame(g2d);
-      
+
     }
-	  else if (state == State.START) {
-      	ShowIntroScreen(g2d);
-	    
+    else if (state == State.START) {
+      ShowIntroScreen(g2d);
+
     } 
-	  else if (state == State.RESTART) {
-        ShowRestartScreen(g2d); 
-	    
+    else if (state == State.RESTART) {
+      ShowRestartScreen(g2d); 
+
     } 
-	  else if (state == State.DONE) {
-        ShowWinScreen(g2d);
+    else if (state == State.DONE) {
+      ShowWinScreen(g2d);
     }
     if(highscore.equals("")) {
       highscore = this.GetHighScore();
 
     }
-	
-	  
+
+
     g.drawImage(ii, 5, 5, this);
     Toolkit.getDefaultToolkit().sync();
     g.dispose();
@@ -918,8 +918,8 @@ public class Board extends JPanel implements ActionListener {
           if (timer.isRunning())
             timer.stop();
           else timer.start();
-	}
-	if (key == 's' || key == 'S')
+        }
+        if (key == 's' || key == 'S')
         {
           state = State.NONE;
           LevelInit();
@@ -963,7 +963,7 @@ public class Board extends JPanel implements ActionListener {
       return reader.readLine();
     } 
     catch (Exception e) {
-      return "Nobody: 0";
+      return "Nobody:0";
     }
     finally {
       try {
