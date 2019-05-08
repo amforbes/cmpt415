@@ -59,7 +59,6 @@ public class Board extends JPanel implements ActionListener {
   Color mazecolor;
 
   boolean ingame = false;
-  boolean restart = false;
   boolean dying = false;
   boolean ppellet = false; 
 
@@ -281,7 +280,7 @@ public class Board extends JPanel implements ActionListener {
     g2d.setColor(Color.white);
     g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-    String s = "Press s to start.";
+    String s = "Press s to start";
     Font small = new Font("Helvetica", Font.BOLD, 25);
     FontMetrics metr = this.getFontMetrics(small);
 
@@ -297,7 +296,7 @@ public class Board extends JPanel implements ActionListener {
 	    g2d.setColor(Color.white);
 	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	    String s = "You lost. Press s to restart game.";
+	    String s = "Game Over. You lost. Press s to restart";
 	    Font small = new Font("Helvetica", Font.BOLD, 25);
 	    FontMetrics metr = this.getFontMetrics(small);
 
@@ -312,7 +311,7 @@ public class Board extends JPanel implements ActionListener {
 	    g2d.setColor(Color.white);
 	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	    String s = "You won. Press s to continue to the next level.";
+	    String s = "Nice Job! Press s to continue to the next level.";
 	    Font small = new Font("Helvetica", Font.BOLD, 25);
 	    FontMetrics metr = this.getFontMetrics(small);
 
@@ -327,7 +326,7 @@ public class Board extends JPanel implements ActionListener {
 	    g2d.setColor(Color.white);
 	    g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	    String s = "You won. Press s to restart.";
+	    String s = "You won!! Press s to restart.";
 	    Font small = new Font("Helvetica", Font.BOLD, 25);
 	    FontMetrics metr = this.getFontMetrics(small);
 
@@ -435,6 +434,7 @@ public class Board extends JPanel implements ActionListener {
     pacsleft--;
     if (pacsleft == 0) {
       ingame = false;
+      score = 0; 
       state = State.RESTART; 
       CheckScore();
       LevelInit(); 
@@ -776,7 +776,7 @@ public class Board extends JPanel implements ActionListener {
         	screendata[i] = leveldata[level][i];
             }
         }
-    	pacsleft = 3; 
+    pacsleft = 3; 
     }
     //if state is done, set level 1 and redraw maze
     if (state == State.DONE) {
