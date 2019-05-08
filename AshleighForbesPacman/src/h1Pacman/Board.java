@@ -15,12 +15,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+//imports for highscore
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.util.Date; 
 
 import javax.swing.ImageIcon;
+//import for highscore
+import javax.swing.JOptionPane;
+// ---
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+//imports for sounds
 import sf.Sound;
 import sf.SoundFactory;
 
@@ -34,6 +46,8 @@ public class Board extends JPanel implements ActionListener {
   public final static String SOUND_DEATH = DIR + "pacman_death.wav";
   public final static String SOUND_EATGHOST = DIR + "pacman_eatghost.wav";
   public final static String SOUND_POWERUP = DIR + "pacman_eatfruit.wav";
+	
+  private String highscore = "";
   
   Dimension d;
   Font smallfont = new Font("Helvetica", Font.BOLD, 20);
@@ -45,6 +59,7 @@ public class Board extends JPanel implements ActionListener {
   Color mazecolor;
 
   boolean ingame = false;
+  boolean restart = false;
   boolean dying = false;
   boolean ppellet = false; 
 
@@ -325,13 +340,59 @@ public class Board extends JPanel implements ActionListener {
   public void DrawScore(Graphics2D g) {
     int i;
     String s;
+    String h;
 
     g.setFont(smallfont);
     g.setColor(new Color(96, 128, 255));
     s = "Score: " + score;
+    h = "Highscore: " + highscore;
     g.drawString(s, scrsize / 6 + 192, scrsize + 30);
     for (i = 0; i < pacsleft; i++) {
       g.drawImage(pacman3left, i * 56 + 18, scrsize + 2, this);
+    }
+    g.drawString(h, scrsize / 6 + 325, scrsize + 30);
+  }
+
+  public void CheckScore(){
+    
+    if(highscore.equals("")) {
+      return;
+    }
+
+    if(score > Integer.parseInt((highscore.split(":")[1]))) {
+      //user setting a new highscore
+      String name = JOptionPane.showInputDialog("New Highscore! Enter name!");
+      highscore = " " + name + " : " + score;
+
+      File scoreFile = new File("highscore.dat");
+      if(!scoreFile.exists()) {
+        try {
+          scoreFile.createNewFile();
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+      FileWriter writeFile = null;
+      BufferedWriter writer = null;
+      try {
+        writeFile = new FileWriter(scoreFile);
+        writer = new BufferedWriter(writeFile);
+        writer.write(this.highscore);
+      }
+      catch(Exception e) {
+        //errors
+      }
+      finally {
+        try {
+          if(writer != null) {
+            writer.close();
+          }
+        }
+        catch(Exception e){
+          //errors
+        }
+      }
     }
   }
 
@@ -353,7 +414,9 @@ public class Board extends JPanel implements ActionListener {
       if (level == leveldata.length - 1) {
             ingame = false;
 	    state = State.DONE;
-      } else if (level < leveldata.length - 1) {
+	    CheckScore();
+      } 
+      else if (level < leveldata.length - 1) {
 	    state = State.NEXT; 
       }
       
@@ -373,9 +436,9 @@ public class Board extends JPanel implements ActionListener {
     if (pacsleft == 0) {
       ingame = false;
       state = State.RESTART; 
+      CheckScore();
       LevelInit(); 
     }
-    
     LevelContinue();
   }
 
@@ -806,6 +869,10 @@ public class Board extends JPanel implements ActionListener {
     } else if (state == State.DONE) {
         ShowWinScreen(g2d);
     }
+    if(highscore.equals("")) {
+      highscore = this.GetHighScore();
+
+    }
 	
 	  
     g.drawImage(ii, 5, 5, this);
@@ -880,5 +947,29 @@ public class Board extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     repaint();
     PowerPelletTimer();
+  }
+
+  public String GetHighScore() {
+    // format: AMS 100
+    FileReader readFile = null;
+    BufferedReader reader = null;
+
+    try {
+      readFile = new FileReader("highscore.dat");
+      reader = new BufferedReader(readFile);
+      return reader.readLine();
+    } 
+    catch (Exception e) {
+      return "Nobody:0";
+    }
+    finally {
+      try {
+        if(reader != null)
+          reader.close();
+      }
+      catch(IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }
