@@ -520,6 +520,7 @@ public class Board extends JPanel implements ActionListener {
           pacmany > (ghosty[i] - 12) && pacmany < (ghosty[i] + 12) &&
           ingame && ppellet) {
         dying = false;
+        score = score + 30; 
         ghostx[i] = 4 * blocksize;
         ghosty[i] = 4 * blocksize;
         Sound sound = SoundFactory.getInstance(SOUND_EATGHOST);
@@ -575,7 +576,7 @@ public class Board extends JPanel implements ActionListener {
       //changes the score when power pellet is eaten
       if ((ch & 32) != 0) {
         screendata[pos] = (short)(ch & 15);
-        this.score = score + 40;
+        this.score = score + 50;
 
         ppellet = true;
         
