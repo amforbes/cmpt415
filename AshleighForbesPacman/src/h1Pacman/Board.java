@@ -433,11 +433,11 @@ public class Board extends JPanel implements ActionListener {
 
     pacsleft--;
     if (pacsleft == 0) {
-      ingame = false;
-      score = 0; 
+      ingame = false; 
       state = State.RESTART; 
       CheckScore();
       LevelInit(); 
+      score = 0;
     }
     LevelContinue();
   }
